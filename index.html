@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스터디 커뮤니티</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    
+    <header>
+        <div class="logo" onclick="location.reload()">Study Community</div>
+        <div class="auth-buttons">
+            <div id="logged-out-btns">
+                <button class="btn btn-login" onclick="openModal('login')">로그인</button>
+                <button class="btn btn-signup" onclick="openModal('signup')">회원가입</button>
+            </div>
+            <div id="logged-in-btns" class="hidden" style="display: flex; gap: 10px; align-items: center;">
+                <span id="user-nickname" style="font-weight: bold; color: var(--primary-color);"></span>
+                <button class="btn btn-logout" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-bar">
+        <button class="subject-btn active" onclick="goHome()">🏠 홈</button>
+        <button class="subject-btn" onclick="filterSubject('국어', this)">국어</button>
+        <button class="subject-btn" onclick="filterSubject('영어', this)">영어</button>
+        <button class="subject-btn" onclick="filterSubject('수학', this)">수학</button>
+        <button class="subject-btn" onclick="filterSubject('사회', this)">사회</button>
+        <button class="subject-btn" onclick="filterSubject('과학', this)">과학</button>
+        <button class="subject-btn" onclick="filterSubject('한국사', this)">한국사</button>
+    </nav>
+
+    <main>
+        <section id="dashboard-view">
+            <div class="dashboard-grid">
+                <div class="dashboard-card"><h3>📢 최근 올라온 글</h3><div id="recent-posts" class="mini-post-list"></div></div>
+                <div class="dashboard-card"><h3>🔥 실시간 인기 글</h3><div id="popular-posts" class="mini-post-list"></div></div>
+                <div class="dashboard-card"><h3>💬 답변을 기다려요</h3><div id="unanswered-posts" class="mini-post-list"></div></div>
+            </div>
+
+            <div class="dashboard-full-card">
+                <h3>📂 내가 쓴 글 모아보기</h3>
+                <div id="my-posts-list" class="mini-post-list">
+                    <p style="color:#999; font-size:0.9rem;">로그인하면 내 글이 보입니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="list-view" class="hidden">
+            <div class="section-header">
+                <h2 id="current-subject-title">게시판</h2>
+                <button class="write-btn" onclick="openWriteModal()">✏️ 글쓰기</button>
+            </div>
+            <div class="sort-bar">
+                <button class="sort-btn active" onclick="sortPosts('latest', this)">최신순</button>
+                <button class="sort-btn" onclick="sortPosts('oldest', this)">오래된 순</button>
+                <button class="sort-btn" onclick="sortPosts('popular', this)">인기순 🔥</button>
+            </div>
+            <div id="posts-container"></div>
+        </section>
+
+        <section id="detail-view" class="hidden detail-view"></section>
+    </main>
+    
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title" class="modal-title">제목</h2>
+            
+            <form id="login-form" class="hidden" onsubmit="handleLogin(event)">
+                <input type="text" id="login-id" class="modal-input" placeholder="아이디" required>
+                <input type="password" id="login-pw" class="modal-input" placeholder="비밀번호" required>
+                <button type="submit" class="btn btn-signup full-btn">로그인</button>
+            </form>
+
+            <form id="signup-form" class="hidden" onsubmit="handleSignup(event)">
+                <input type="text" id="signup-id" class="modal-input" placeholder="사용할 아이디" required>
+                <input type="email" id="signup-email" class="modal-input" placeholder="이메일 주소" required>
+                <input type="password" id="signup-pw" class="modal-input" placeholder="비밀번호 (6자리 이상)" required>
+                <button type="submit" class="btn btn-signup full-btn">회원가입</button>
+            </form>
+
+            <form id="post-form" class="hidden" onsubmit="submitPost(event)">
+                <select id="post-subject" class="modal-input" required>
+                    <option value="" disabled selected>과목 선택</option>
+                    <option value="국어">국어</option>
+                    <option value="영어">영어</option>
+                    <option value="수학">수학</option>
+                    <option value="사회">사회</option>
+                    <option value="과학">과학</option>
+                    <option value="한국사">한국사</option>
+                </select>
+                <input type="text" id="post-title" class="modal-input" placeholder="제목" required>
+                <textarea id="post-content" class="modal-input" rows="6" placeholder="내용" required></textarea>
+                <input type="file" id="post-photo" accept="image/*" class="modal-input">
+                <button type="submit" class="btn btn-signup full-btn">등록하기</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
